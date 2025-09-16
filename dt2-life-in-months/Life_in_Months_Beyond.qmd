@@ -1,0 +1,147 @@
+---
+title: "Life in Months"
+author: "Your Name"
+format: html
+execute: 
+  warning: false
+  echo: true
+  error: false
+---
+
+# Creating A Visualization about your Life in Months
+
+Setup Chunk. In this step, we prepare the environment for your project including some formatting and any packages you will use.
+```{r}
+#| label: setup
+#| include: false
+
+#if on desktop - be sure to install tidyverse to get these packages. tidyverse is already installed on the server.
+library(dplyr) 
+library(lubridate)
+library(forcats)
+library(tidyr)
+library(ggplot2)
+
+```
+
+Preliminary Code: 
+Run this code chunk once.  Press 1 for ALL when prompted. 
+```{r}
+#| message: false
+#| warning: false
+
+#this line of code is used to install the waffle package from an online code repository, because this package is not currently on CRAN
+remotes::install_github("hrbrmstr/waffle")
+
+#This line will load the waffle package, after installing it in the previous line of code
+#Remember if it loads correctly, you can search for "waffle" in the packages tab of RStudio and you should see a check mark next to the package name
+library(waffle) 
+```
+
+After you run the above code, check your packages tab in the bottom right window for `waffle`. It should say you have version 1.0.1. If it says you have a lower version (like 0.7), then you need to run the code again to make sure you get the correct version! If you know you ran the code above and it worked, try refreshing your packages window or restarting your R project to see if the correct version appears. 
+
+
+## Preparating Your Data
+First, we are going to set up your data.  For `birth_year` put the year you were born and for `birth_month` put the number that corresponds with the month you were born.  `last_year` and `last_month` are set to your birth month minus 1 and your birth year plus 80.
+
+```{r}
+birth_year <- 1987
+birth_month <- 5 #May
+last_year <- birth_year + 80
+last_month <- birth_month - 1
+```
+
+Next, we are going to create the framework for your life in months.  All you have to do for the next chunk is run the code in the next chunk - it will generate a data frame that contains all the years and months from your birth until the month and year 80 years after your birth.  
+```{r}
+life_data <- expand_grid(
+  month = month.name,
+  year = birth_year:last_year) %>%
+  mutate(month = fct_relevel(month, month.name)) %>%
+  arrange(year, month) %>%
+  group_by(year) %>%
+  mutate(month_number = row_number()) %>%
+  ungroup() %>%
+  filter(!(year == birth_year & month_number < birth_month)) %>% 
+  filter(!(year == last_year & month_number > last_month))
+```
+
+
+## Defining your Eras
+
+You will adapt the code below to define your eras and colors for each era.  Put the "year,month", "era name", "color" - you can use the name of the color or the hex code for the color.
+
+**Choosing colorblind-friend colors is one of your main tasks for this assignment!** Reference our Day 5 slides for three R color packages you might consider, as well as the slide on how to manually make color scales and get hex codes. See the Canvas assignment for a link to the website you can use to test if your final graph is color-blind friendly. I highly recommend limiting the number of eras in your life to around *10 or less* so that your colors are still distinct when in grayscale.
+
+You should customize the eras defined here for your own life - you can add, change, or remove lines as needed.
+
+```{r}
+eras <- tribble(
+~year_month, ~era, ~fill_color,
+"1987,5", "Childhood in CA, CO, and WI", "#0B4221",  #modify to you
+"2005,8", "BS @ Point Loma Nazarene University", "#285B5D",
+#you can add more lines and events as you desire
+"2009,9", "PhD @ NC State University", "#518393",
+"2016,8", "Became Statistics Professor at CSUMB", "#7DACBC",
+"2019,8", "New Statistics Major Starts", "#96B0BB",
+"2020,3", "Pandemic Teaching and Learning", "#C9B7A5",
+"2021,8", "Back in Person", "#E9C6A5",
+"2024,9", "Unlived Life", "#E4DECE"  #only change color
+)
+```
+
+Now run the following code - this will add your eras to your life in months.
+```{r}
+era_names <- paste0(eras$era)
+life_data_era <- life_data %>%
+  rowwise() %>%
+  mutate(year_month = paste0(c(year, month_number), 
+                             collapse = ",")) %>%
+  ungroup() %>%
+  left_join(eras, by = "year_month") %>%
+  fill(era, fill_color) %>%
+  mutate(fill_color = fct_inorder(fill_color),
+         era = fct_inorder(era)) 
+```
+
+You can look at the data using the following code:
+```{r}
+#| eval: false
+View(life_data_era)
+```
+
+
+Now, let's create the waffle chart! Run the code to create the graph, but *change the title name* to match your name. The preview of the graph that you see might look like it has odd proportions. Don't worry about this; when we save the graph in the next code chunk, we will modify the size.
+```{r}
+#save the waffle graph as an object in R
+waffle_life <- life_data_era %>%
+  #the count of each era is the number of months in that era
+  count(era) %>% 
+  ggplot(aes(fill = era, values = n)) +
+  #make each row a year/12 months
+  waffle::geom_waffle(color = "#F7F7F7", n_rows = 12, size = 1, flip = FALSE, na.rm=FALSE) + 
+  scale_fill_manual(name = "", values = eras$fill_color) +
+  coord_equal() +
+  theme_enhance_waffle() +
+  theme(legend.text = element_text(size = 24),
+        legend.position="bottom",
+        axis.ticks = element_blank(),
+        plot.background = element_rect(fill = "#F7F7F7", 
+                                       color = "#F7F7F7")) +
+  #change the Title Name
+  ggtitle("Dr. Alana Unfried's Life in Months") + 
+  theme(plot.title = element_text(face = "bold", size = 40))
+
+#print the graph
+waffle_life
+```
+If you get an error that "geom_waffle" is not found, you may need to restart you R Session (under Session).
+
+
+Now we can save the image - Change out your professor's name with your name. You can adjust the ratio for height/width as needed.
+```{r}
+ggsave("DrUnfrieds_Life_in_Months.png", plot = waffle_life, 
+       device = "png", width = 25, height = 15, dpi = 300)
+```
+
+
+You're not done yet! Be sure to check your graph in the colorblind simulator (see Canvas) to make sure you chose good colors. 
