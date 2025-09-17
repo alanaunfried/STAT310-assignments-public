@@ -2,4 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+
+#ignore the overall rproject file tied to the repo
 STAT310-assignments-public.Rproj
+
+#ignore the destop.ini files from any subdirectory
+**/desktop.ini
