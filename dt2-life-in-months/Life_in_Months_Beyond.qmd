@@ -31,6 +31,7 @@ Run this code chunk once.  Press 1 for ALL when prompted.
 #| warning: false
 
 #this line of code is used to install the waffle package from an online code repository, because this package is not currently on CRAN
+#IMPORTANT: before you knit the file, you can comment out this line of code (add a hashtag before the word "remotes") because you do not need to reinstall the package.
 remotes::install_github("hrbrmstr/waffle")
 
 #This line will load the waffle package, after installing it in the previous line of code
