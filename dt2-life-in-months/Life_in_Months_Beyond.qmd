@@ -22,24 +22,18 @@ library(forcats)
 library(tidyr)
 library(ggplot2)
 
-```
-
-Preliminary Code: 
-Run this code chunk once.  Press 1 for ALL when prompted. 
-```{r}
-#| message: false
-#| warning: false
-
-#this line of code is used to install the waffle package from an online code repository, because this package is not currently on CRAN
-#IMPORTANT: before you knit the file, you can comment out this line of code (add a hashtag before the word "remotes") because you do not need to reinstall the package.
-remotes::install_github("hrbrmstr/waffle")
+#this line of code is used to install the waffle package from an online code repository, because this package is not currently on CRAN. THIS IS ALREADY DONE ON THE Cal-ICOR SERVER. However if you are using the desktop version of R, you need to uncomment this line of code, install the package, and then comment it out again
+#Press 1 for ALL when prompted. 
+#remotes::install_github("hrbrmstr/waffle")
 
 #This line will load the waffle package, after installing it in the previous line of code
 #Remember if it loads correctly, you can search for "waffle" in the packages tab of RStudio and you should see a check mark next to the package name
 library(waffle) 
+
 ```
 
-After you run the above code, check your packages tab in the bottom right window for `waffle`. It should say you have version 1.0.1. If it says you have a lower version (like 0.7), then you need to run the code again to make sure you get the correct version! If you know you ran the code above and it worked, try refreshing your packages window or restarting your R project to see if the correct version appears. 
+
+After you run the above code, check your packages tab in the bottom right window for `waffle`. It should say you have version 1.0.2. If it says you have a lower version (like 0.7), then you need to run the code again to make sure you get the correct version! If you know you ran the code above and it worked, try refreshing your packages window or restarting your R project to see if the correct version appears. 
 
 
 ## Preparating Your Data
