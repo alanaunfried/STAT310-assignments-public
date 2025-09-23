@@ -1,0 +1,191 @@
+---
+title: "HIV Rates Recreation as Ugly Graph"
+format: html
+execute: 
+  warning: false
+  echo: true
+  error: false
+---  
+
+
+```{r}
+#| label: setup
+#| include: false
+
+library(tidyverse) #loads ggplot2, readr, dplyr and other packages
+library(openintro) #contains data with state abbrev.
+library(ggrepel) #for labeling
+```
+
+## Recreating the Original Graph
+
+Use the comment option in the code chunks `# comment` to identify what is happening throughout the code chunks.
+
+### Data Cleaning  
+
+First, we must read in the data.
+```{r}
+#| label: data
+#| message: false
+
+hiv <- read_csv("HIV2015.csv") #loads in data
+```
+
+Here is some data cleaning to make coloring the bars a bit easier.
+
+```{r}
+#| label: data_clean_abr
+
+hiv_update <- hiv |> 
+  mutate(state_abr = ifelse(State == "US", "US", state2abbr(State))) |>  #specifies the use of State abbreviations in the variable state_abr
+  mutate(state_fin = ifelse(state_abr == "WI", "WI", 
+                            ifelse(state_abr == "US", "US", Midwest)))  #specifies stat_fin as US, WI, Y/N for Midwest for shading
+  
+```
+
+
+## First Draft
+
+For each line of code, **edit the comments** to identify what we are doing to the graph. It might help to highlight the code from the beginning to the end of each line of interest (excluding the `+`) to see what it does.
+
+```{r}
+#| label: first_draft
+
+ggplot(data = hiv_update) +                            #comment
+  geom_col(aes(x = fct_reorder(state_abr, -Rate2015),  #comment
+               y = Rate2015,                           #comment
+               fill = state_fin)) +                    #comment
+  labs(title = "HIV diagnosis rates across the U.S",   #comment
+       subtitle = "Estimated HIV diagnosis rate by state, 2015",   #comment
+       x = "State of Residence at Diagnosis",   #comment
+       y = "Rate per 100,000 Population") +   #comment
+  guides(fill = "none") +   #comment
+  scale_fill_manual(values = c("#28458a","#7ac4ab","#c775c6","#fcf995")) +   #comment
+  theme_classic() +   #comment
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),   #comment
+        plot.title = element_text(hjust = 0.5),   #comment
+        plot.subtitle = element_text(hjust = 0.5)) +   #comment
+  scale_y_continuous(expand = c(0,0), limits = c(0,60))   #comment
+```
+
+Notice that our order of Wisconsin and WV are not the same as the original graph - if we look at it we see they have the same value.  Why?
+
+```{r}
+#| label: data_check
+
+hiv_update |> 
+  filter(state_abr %in% c("WI","WV"))
+```
+
+## Final Update
+
+Here is a final version of the graph. **Don't edit this code!** This is your starting point that you can use to compare to your edited version. Create your edited version in the next code chunk. 
+
+```{r}
+#| label: updated_graph
+
+#Remember, don't edit this code chunk! Edit code in the next chunk
+
+hiv_update |> 
+  ggplot(aes(x = fct_relevel(fct_reorder(state_abr, -Rate2015), 
+                             "WI", after = 41 ),      #comment
+             y=Rate2015, 
+             fill = state_fin)) +
+  geom_col() +
+  labs(title = "HIV diagnosis rates across the U.S",
+       subtitle = "Estimated HIV diagnosis rate by state, 2015",
+       x = "State of Residence at Diagnosis",
+       y = "Rate per 100,000 Population") +
+  guides(fill = "none") +
+  scale_fill_manual(values = c("#28458a","#7ac4ab","#c775c6","#fcf995")) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,60)) +
+  geom_text_repel(data = hiv_update |>  #comment
+                    filter(state_fin %in% c("Y","US","WI") | state_abr == "DC"),   #comment
+                  aes(label = Rate2015),  #comment 
+                  point.padding = NA, nudge_y = 2.5)  #comment
+
+```
+
+## Make this graph ugly
+
+The above graph went through a lot of modification to make it "just so" in appearance. While we will make no claims that this is a beautiful graph, it could be worse and we are going to make it worse.
+
+Our goal is to use R to make this graph ugly - everything from defying principles of perception, Gestalt principles, color theory, and general visual appeal (text, readability, etc).
+
+Here are a few resources: 
+
+- [ggplot2 Cheatsheet with search options](https://www.computerworld.com/article/2935394/my-ggplot2-cheat-sheet-search-by-task.html)  
+
+- [A ggplot2 tutorial for beautiful plotting](https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/)  
+
+- Don't forget the Esquisse and ggThemeAssist packages as well, which are excellent for hand-picking ugly features
+
+- Here is another way you can test ChatGPT. Ask ChatGPT to give you R code that will take a ggplot graph and make it uglier. Adapt the code you receive for your own graph. You could also feed ChatGPT the full code for this graph and ask it to adapt the code to make it ugly. **CAUTION:** ChatGPT will go overboard and add waaaaayyy too much, likely making your graph BAD and WRONG, not just ugly! Make sure to pick and choose carefully among the code edits that genAI suggests. *You will lose points if you graph is no longer clear and informative. Use ChatGPT as a tool to assist you, not to take over your own creative work.* 
+
+Update the code below to make the graph ugly. While you may remove some code to remove specific features, you **must also add 6 more code** options to make it uglier than the default settings for `ggplot2`. Reverting to the default is not sufficient for this assignment. The goal of this assignment is to help you learn more about all the ways you can customize a plot. Keep track of useful and interesting code features that you might use in the future. See Canvas to see what counts as new code customizations! Keep in mind that *modifying* existing code does not count as a customization. 
+
+Customize the code below with at least **6 new customizations** to make it ugly. **You must comment each new piece of code you add/adapt to explain what it does.** Even if you use genAI to assist you in making ugly choices, you should be able to explain each line of code that you add. 
+
+```{r}
+#| label: ugly_graph
+
+#don't forget to add a COMMENT for each edit/addition to explain what the code does!
+hiv_update |> 
+  ggplot(aes(x = fct_relevel(fct_reorder(state_abr, -Rate2015), 
+                             "WI", after = 41 ), 
+             y = Rate2015, 
+             fill = state_fin)) +
+  geom_col() +
+  labs(title = "HIV diagnosis rates across the U.S",
+       subtitle = "Estimated HIV diagnosis rate by state, 2015",
+       x = "State of Residence at Diagnosis",
+       y = "Rate per 100,000 Population") +
+  guides(fill = "none") +
+  scale_fill_manual(values = c("#28458a","#7ac4ab","#c775c6","#fcf995")) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,60)) +
+  geom_text_repel(data = hiv_update |> 
+                    filter(state_fin %in% c("Y","US","WI") | state_abr == "DC"),
+                  aes(label = Rate2015),
+                  point.padding = NA, nudge_y = 2.5)
+
+```
+
+
+Create a .png file of your final graph (see Design Task #2 for an example). Be sure to specify approach sizes.  Call the image `LastName_UglyGraph.png`
+
+```{r}
+#Remember by default R will save the last graph that was created,so we do not need to specify "plot=" like we did in Design Task #2.You can still customize the dimensions to something that seems appropriate
+
+ggsave("graphname.png", device = "png", width = 7, height = 5)
+```
+
+Keep going! Don't forget to answer the reflection questions below. 
+
+## Reflection
+
+What types of features did you modify to make the graph "ugly?" Why did you choose those features? How do they violate principles of good graph design in terms of perception, Gestalt, color, and visual appeal? 
+
+> Insert Answer Here  
+
+What features of your graph ensure that it is "ugly", but not "bad" or "wrong?"
+
+> Insert Answer Here  
+
+
+What were some interesting code features of `ggplot2` that you learned during this design task? How do they work?
+
+> Insert Answer Here
+
+
+What tools did you use to help you write code to make your graph ugly? How effective were they? If you use Generative AI, copy and paste your prompt here and be sure to cite which genAI tool you used.
+
+> Insert Answer Here
+
