@@ -1,0 +1,94 @@
+---
+title: "Burtin's Bacteria"
+author: "Your Name"
+format: 
+  dashboard:
+    orientation: columns
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+#This code chunk is set to include = FALSE so that the code and output do not appear in the final dashboard
+
+library(tidyverse)
+
+antibio <- read_csv("Burtin_Antibiotics.csv")
+#if you use the transformed data you will need to include that code here
+```
+
+# Graphs
+
+<!-- NOTE: When you render this document, open it in a new browser window so you can view the full dashboard! It is important to consider how it fills the whole computer screen as you develop it.  -->
+
+## Column {width=65%}
+
+Add TEXT if desired
+
+```{r}
+#| title: Add TITLE
+
+
+ggplot(antibio) +
+  geom_histogram(aes(x=Penicilin))
+#this is not a good option for a visualization FYI, it is just a demo!
+```
+
+## Column {width=35%}
+
+```{r}
+#| title: Streptom (edit title)
+
+ggplot(antibio) +
+  geom_histogram(aes(x=Streptom))
+#this is not a good option for a visualization FYI, it is just a demo!
+
+```
+
+```{r}
+#| title: Neomycin (edit title)
+
+ggplot(antibio) +
+  geom_histogram(aes(x=Neomycin))
+#this is not a good option for a visualization FYI, it is just a demo!
+
+```
+
+# Questions
+
+## Column {width=50%}
+
+1.  Which bacteria was the hardest to kill? Easiest to kill? Explain how you know.
+
+    <div>
+
+    >  Insert Answer Here
+
+    </div>
+
+2.  Was one antibiotic the most effective overall? Explain how you know.
+
+    <div>
+
+    >  Insert Answer Here
+
+    </div>
+
+3.  Did antibiotic effectiveness vary by gram staining? Explain how you know.
+
+    <div>
+
+    >  Insert Answer Here
+
+    </div>
+
+## Column {width=50%}
+
+4.  Did you use GenAI and/or Google, etc to help you edit your code? If so, indicate what platform GenAI you used (Google search, Chat GPT Model 5, etc) and provide any prompts that you used. Discuss whether or not you found the tool you used helpful and in what ways.
+
+    <div>
+
+    >  Insert Answer Here
+
+    </div>
