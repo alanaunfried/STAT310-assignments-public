@@ -4,6 +4,7 @@ author: "Your Name"
 format: 
   dashboard:
     orientation: columns
+    embed-resources: true
 ---
 
 ```{r}
