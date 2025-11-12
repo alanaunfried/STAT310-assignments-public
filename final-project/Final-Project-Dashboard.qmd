@@ -1,0 +1,85 @@
+---
+title: "Create a Title for the Project"
+author: "Your Name"
+format: 
+  dashboard:
+    orientation: columns
+    embed-resources: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+#add any packages that you need here
+
+```
+
+# Introductory Dashboard
+
+Be sure to include:\
+- Data source/descriptions;\
+- any prerequisite data cleaning;\
+- questions to be asked of the data and answered in subsequent visualizations.
+
+# Page 2 - Customize Title!
+
+Default layout (specified in YAML) is COLUMNS, so this text creates a separate column on the dashboard
+
+You can use different formats to include multiple visualizations or just focus on one visualization. Remember to see Canvas for resources! Here is the main website on [Quarto Dashboard Documentation](https://quarto.org/docs/dashboards/).
+
+## Column {width="60%"}
+
+Add text here if desired
+
+### Chart 1. Note that this title doesn't actually show up on the dashboard! The \# is needed to create a title, but the text after it is ignored unless you customize it below.
+
+```{r}
+#| title: Add TITLE here
+
+plot(cars)
+```
+
+## Column (note I can "title" this heading whatever I want. R knows to make a column because I specified column orientation in the YAML) {width="40%"}
+
+### Chart 2
+
+```{r}
+plot(cars)
+```
+
+### Chart 3
+
+```{r}
+#| title: Chart 3 (customize the title!)
+
+plot(cars)
+```
+
+# Page 3 Title {orientation="rows"}
+
+Notice the "row" orientation of this dashboard!
+
+## Row {height="60%"}
+
+### Create interesting Headers
+
+```{r}
+plot(cars)
+```
+
+## Row {height="40%"}
+
+### Chart 2
+
+```{r}
+plot(cars)
+```
+
+### Chart 3
+
+```{r}
+plot(cars)
+```
+
+And remember you can add text...
