@@ -50,13 +50,13 @@ Next, we are going to create the framework for your life in months.  All you hav
 ```{r}
 life_data <- expand_grid(
   month = month.name,
-  year = birth_year:last_year) %>%
-  mutate(month = fct_relevel(month, month.name)) %>%
-  arrange(year, month) %>%
-  group_by(year) %>%
-  mutate(month_number = row_number()) %>%
-  ungroup() %>%
-  filter(!(year == birth_year & month_number < birth_month)) %>% 
+  year = birth_year:last_year) |>
+  mutate(month = fct_relevel(month, month.name)) |>
+  arrange(year, month) |>
+  group_by(year) |>
+  mutate(month_number = row_number()) |>
+  ungroup() |>
+  filter(!(year == birth_year & month_number < birth_month)) |> 
   filter(!(year == last_year & month_number > last_month))
 ```
 
@@ -87,13 +87,13 @@ eras <- tribble(
 Now run the following code - this will add your eras to your life in months.
 ```{r}
 era_names <- paste0(eras$era)
-life_data_era <- life_data %>%
-  rowwise() %>%
+life_data_era <- life_data |>
+  rowwise() |>
   mutate(year_month = paste0(c(year, month_number), 
-                             collapse = ",")) %>%
-  ungroup() %>%
-  left_join(eras, by = "year_month") %>%
-  fill(era, fill_color) %>%
+                             collapse = ",")) |>
+  ungroup() |>
+  left_join(eras, by = "year_month") |>
+  fill(era, fill_color) |>
   mutate(fill_color = fct_inorder(fill_color),
          era = fct_inorder(era)) 
 ```
@@ -108,9 +108,9 @@ View(life_data_era)
 Now, let's create the waffle chart! Run the code to create the graph, but *change the title name* to match your name. The preview of the graph that you see might look like it has odd proportions. Don't worry about this; when we save the graph in the next code chunk, we will modify the size.
 ```{r}
 #save the waffle graph as an object in R
-waffle_life <- life_data_era %>%
+waffle_life <- life_data_era |>
   #the count of each era is the number of months in that era
-  count(era) %>% 
+  count(era) |> 
   ggplot(aes(fill = era, values = n)) +
   #make each row a year/12 months
   waffle::geom_waffle(color = "#F7F7F7", n_rows = 12, size = 1, flip = FALSE, na.rm=FALSE) + 
