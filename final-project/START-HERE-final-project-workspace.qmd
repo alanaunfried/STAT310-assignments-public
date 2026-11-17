@@ -1,0 +1,50 @@
+---
+title: "Final Project Workspace"
+format:
+  html:
+    embed-resources: true
+execute: 
+  warning: false
+  echo: true
+  error: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+```
+
+This is a workspace for you to work on your final visualizations OUTSIDE of the final project dashboard. I recommend developing your visualizations and data cleaning here, then copying your code into the dashboard file where appropriate. This file will not be graded; only your final dashboard is graded. 
+
+
+
+## Data Source
+
+Include links and information to the data used, describe the data and plan out your questions. Read in the data.
+
+```{r}
+
+```
+
+
+
+## Data Cleaning
+
+Write any code needed to clean or prepare your data if needed to make your visualizations
+
+```{r}
+
+```
+
+
+
+## Visualization Preparation
+
+Provide any code to create your visualizations or perhaps to play around with different ideas.  You can leave code here that you might not use in your final dashboard.
+
+```{r}
+
+```
+
+
